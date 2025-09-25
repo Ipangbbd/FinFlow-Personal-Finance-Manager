@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFF0A0E21),
       body: provider.Consumer<AppState>(
         builder: (context, appState, _) {
           // === Data Calculation ===
@@ -87,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                            Theme.of(context).primaryColor,
+                            const Color(0xFF1E3A5F),
+                            const Color(0xFF0A0E21),
                           ],
                         ),
                       ),
@@ -110,14 +110,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           color: Colors.white,
                                           fontSize: 28,
                                           fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         "Here's your financial overview",
                                         style: TextStyle(
-                                          color: Colors.white.withValues(alpha: 0.9),
+                                          color: Colors.white.withValues(alpha: 0.7),
                                           fontSize: 16,
+                                          letterSpacing: 0.3,
                                         ),
                                       ),
                                     ],
@@ -125,8 +127,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.2),
+                                      color: Colors.white.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        color: Colors.white.withValues(alpha: 0.2),
+                                        width: 1,
+                                      ),
                                     ),
                                     child: const Icon(
                                       Icons.notifications_outlined,
@@ -160,16 +166,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Colors.white,
-                                Colors.grey[50]!,
+                                const Color(0xFF1A1F3A),
+                                const Color(0xFF151929),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
+                              width: 1,
+                            ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.08),
+                                color: Colors.black.withValues(alpha: 0.3),
                                 blurRadius: 20,
-                                offset: const Offset(0, 4),
+                                offset: const Offset(0, 10),
+                              ),
+                              BoxShadow(
+                                color: const Color(0xFF00D4FF).withValues(alpha: 0.1),
+                                blurRadius: 40,
+                                offset: const Offset(0, 0),
                               ),
                             ],
                           ),
@@ -186,8 +201,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         'Total Balance',
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.grey[600],
+                                          color: Colors.white.withValues(alpha: 0.6),
                                           fontWeight: FontWeight.w500,
+                                          letterSpacing: 0.5,
                                         ),
                                       ),
                                       const SizedBox(height: 8),
@@ -201,9 +217,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           style: TextStyle(
                                             fontSize: 32,
                                             fontWeight: FontWeight.bold,
+                                            letterSpacing: 1,
                                             color: totalBalance >= 0
-                                                ? Colors.green[600]
-                                                : Colors.red[600],
+                                                ? const Color(0xFF00D4FF)
+                                                : const Color(0xFFFF6B6B),
+                                            shadows: [
+                                              Shadow(
+                                                color: totalBalance >= 0
+                                                    ? const Color(0xFF00D4FF).withValues(alpha: 0.5)
+                                                    : const Color(0xFFFF6B6B).withValues(alpha: 0.5),
+                                                blurRadius: 10,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -218,15 +243,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     child: Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[100],
+                                        color: Colors.white.withValues(alpha: 0.08),
                                         borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.white.withValues(alpha: 0.1),
+                                          width: 1,
+                                        ),
                                       ),
                                       child: Icon(
                                         _isBalanceVisible
                                             ? Icons.visibility_outlined
                                             : Icons.visibility_off_outlined,
                                         size: 20,
-                                        color: Colors.grey[600],
+                                        color: Colors.white.withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ),
@@ -238,9 +267,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
                                   color: totalBalance >= 0
-                                      ? Colors.green[50]
-                                      : Colors.red[50],
+                                      ? const Color(0xFF00D4FF).withValues(alpha: 0.15)
+                                      : const Color(0xFFFF6B6B).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: totalBalance >= 0
+                                        ? const Color(0xFF00D4FF).withValues(alpha: 0.3)
+                                        : const Color(0xFFFF6B6B).withValues(alpha: 0.3),
+                                    width: 1,
+                                  ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -251,8 +286,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           : Icons.trending_down,
                                       size: 16,
                                       color: totalBalance >= 0
-                                          ? Colors.green[600]
-                                          : Colors.red[600],
+                                          ? const Color(0xFF00D4FF)
+                                          : const Color(0xFFFF6B6B),
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
@@ -262,9 +297,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
+                                        letterSpacing: 0.3,
                                         color: totalBalance >= 0
-                                            ? Colors.green[600]
-                                            : Colors.red[600],
+                                            ? const Color(0xFF00D4FF)
+                                            : const Color(0xFFFF6B6B),
                                       ),
                                     ),
                                   ],
@@ -281,13 +317,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Expanded(
                               child: _EnhancedSummaryCard(
                                 icon: Icons.trending_up,
-                                iconColor: Colors.green[600]!,
-                                backgroundColor: Colors.green[50]!,
+                                iconColor: const Color(0xFF00D4FF),
+                                backgroundColor: const Color(0xFF00D4FF).withValues(alpha: 0.1),
                                 label: 'Income',
                                 value: _isBalanceVisible
                                     ? formatter.format(totalIncome)
                                     : '••••••',
-                                valueColor: Colors.green[600]!,
+                                valueColor: const Color(0xFF00D4FF),
                                 isVisible: _isBalanceVisible,
                               ),
                             ),
@@ -295,13 +331,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Expanded(
                               child: _EnhancedSummaryCard(
                                 icon: Icons.trending_down,
-                                iconColor: Colors.red[600]!,
-                                backgroundColor: Colors.red[50]!,
+                                iconColor: const Color(0xFFFF6B6B),
+                                backgroundColor: const Color(0xFFFF6B6B).withValues(alpha: 0.1),
                                 label: 'Expenses',
                                 value: _isBalanceVisible
                                     ? formatter.format(totalExpense)
                                     : '••••••',
-                                valueColor: Colors.red[600]!,
+                                valueColor: const Color(0xFFFF6B6B),
                                 isVisible: _isBalanceVisible,
                               ),
                             ),
@@ -318,7 +354,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
                               ),
                             ),
                             TextButton.icon(
@@ -326,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               icon: const Icon(Icons.arrow_forward, size: 16),
                               label: const Text('See All'),
                               style: TextButton.styleFrom(
-                                foregroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: const Color(0xFF00D4FF),
                               ),
                             ),
                           ],
@@ -384,13 +421,24 @@ class _EnhancedSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1A1F3A),
+            const Color(0xFF151929),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -402,6 +450,16 @@ class _EnhancedSummaryCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: iconColor.withValues(alpha: 0.2),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: iconColor.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                ),
+              ],
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
@@ -410,8 +468,9 @@ class _EnhancedSummaryCard extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[600],
+              color: Colors.white.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
             ),
           ),
           const SizedBox(height: 4),
@@ -424,6 +483,13 @@ class _EnhancedSummaryCard extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: valueColor,
+                letterSpacing: 0.5,
+                shadows: [
+                  Shadow(
+                    color: valueColor.withValues(alpha: 0.4),
+                    blurRadius: 6,
+                  ),
+                ],
               ),
             ),
           ),
@@ -451,11 +517,22 @@ class _EnhancedTransactionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1A1F3A),
+            const Color(0xFF151929),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.06),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -467,17 +544,23 @@ class _EnhancedTransactionCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: (transaction.type == 'income'
-                  ? Colors.green[50]
-                  : Colors.red[50]),
+                  ? const Color(0xFF00D4FF).withValues(alpha: 0.15)
+                  : const Color(0xFFFF6B6B).withValues(alpha: 0.15)),
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: transaction.type == 'income'
+                    ? const Color(0xFF00D4FF).withValues(alpha: 0.3)
+                    : const Color(0xFFFF6B6B).withValues(alpha: 0.3),
+                width: 1,
+              ),
             ),
             child: Icon(
               transaction.type == 'income'
                   ? Icons.add
                   : Icons.remove,
               color: transaction.type == 'income'
-                  ? Colors.green[600]
-                  : Colors.red[600],
+                  ? const Color(0xFF00D4FF)
+                  : const Color(0xFFFF6B6B),
               size: 20,
             ),
           ),
@@ -491,7 +574,8 @@ class _EnhancedTransactionCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Colors.white,
+                    letterSpacing: 0.3,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -499,7 +583,8 @@ class _EnhancedTransactionCard extends StatelessWidget {
                   transaction.category,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: Colors.white.withValues(alpha: 0.5),
+                    letterSpacing: 0.2,
                   ),
                 ),
               ],
@@ -518,9 +603,18 @@ class _EnhancedTransactionCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
                     color: transaction.type == 'income'
-                        ? Colors.green[600]
-                        : Colors.red[600],
+                        ? const Color(0xFF00D4FF)
+                        : const Color(0xFFFF6B6B),
+                    shadows: [
+                      Shadow(
+                        color: transaction.type == 'income'
+                            ? const Color(0xFF00D4FF).withValues(alpha: 0.4)
+                            : const Color(0xFFFF6B6B).withValues(alpha: 0.4),
+                        blurRadius: 6,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -539,11 +633,22 @@ class _EmptyTransactionsWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1A1F3A),
+            const Color(0xFF151929),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -554,13 +659,17 @@ class _EmptyTransactionsWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(50),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 1,
+              ),
             ),
             child: Icon(
               Icons.receipt_long_outlined,
               size: 40,
-              color: Colors.grey[400],
+              color: Colors.white.withValues(alpha: 0.3),
             ),
           ),
           const SizedBox(height: 16),
@@ -569,7 +678,8 @@ class _EmptyTransactionsWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Colors.grey[700],
+              color: Colors.white.withValues(alpha: 0.9),
+              letterSpacing: 0.5,
             ),
           ),
           const SizedBox(height: 8),
@@ -577,7 +687,8 @@ class _EmptyTransactionsWidget extends StatelessWidget {
             'Start by adding your first transaction',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[500],
+              color: Colors.white.withValues(alpha: 0.5),
+              letterSpacing: 0.3,
             ),
           ),
         ],

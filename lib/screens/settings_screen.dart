@@ -37,10 +37,14 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    const primary = Color(0xFF00D4FF);
+    const danger = Color(0xFFFF6B6B);
+    // const surfaceStart = Color(0xFF1A1F3A);
+    // const surfaceEnd = Color(0xFF151929);
+    const backgroundColor = Color(0xFF0A0E21);
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: backgroundColor,
       body: provider.Consumer<AppState>(
         builder: (context, appState, _) {
           return FadeTransition(
@@ -56,13 +60,13 @@ class _SettingsScreenState extends State<SettingsScreen>
                   backgroundColor: Colors.transparent,
                   flexibleSpace: FlexibleSpaceBar(
                     background: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            theme.primaryColor.withValues(alpha: 0.8),
-                            theme.primaryColor,
+                            Color(0xFF1E3A5F),
+                            backgroundColor,
                           ],
                         ),
                       ),
@@ -85,6 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                             color: Colors.white,
                                             fontSize: 32,
                                             fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.5,
                                           ),
                                         ),
                                         SizedBox(height: 8),
@@ -93,6 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: 16,
+                                            letterSpacing: 0.3,
                                           ),
                                         ),
                                       ],
@@ -101,12 +107,16 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.2),
+                                      color: Colors.white.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: Colors.white.withValues(alpha: 0.2),
+                                        width: 1,
+                                      ),
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.settings,
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: Colors.white,
                                       size: 28,
                                     ),
                                   ),
@@ -128,7 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // === Quick Stats Cards ===
-                        _buildQuickStatsSection(appState),
+                        _buildQuickStatsSection(appState, primary),
                         const SizedBox(height: 32),
 
                         // === Data Management Section ===
@@ -136,14 +146,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                           context: context,
                           title: 'Data Management',
                           icon: Icons.storage,
-                          iconColor: Colors.blue,
+                          iconColor: primary,
                           children: [
                             _buildModernTile(
                               context: context,
                               icon: Icons.download_rounded,
                               title: 'Export Data',
                               subtitle: 'Download your financial data',
-                              iconColor: Colors.green,
+                              iconColor: const Color(0xFF00FFA3),
                               onTap: () => _showSnack(context, 'Export data not implemented.'),
                             ),
                             _buildModernTile(
@@ -151,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                               icon: Icons.upload_rounded,
                               title: 'Import Data',
                               subtitle: 'Restore from backup',
-                              iconColor: Colors.orange,
+                              iconColor: const Color(0xFFFFD166),
                               onTap: () => _showSnack(context, 'Import data not implemented.'),
                             ),
                             _buildModernTile(
@@ -159,7 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                               icon: Icons.category_rounded,
                               title: 'Manage Categories',
                               subtitle: '${appState.categories.length} categories available',
-                              iconColor: Colors.purple,
+                              iconColor: const Color(0xFF6A4C93),
                               onTap: () => _showManageCategoriesDialog(context, appState),
                             ),
                           ],
@@ -171,14 +181,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                           context: context,
                           title: 'Statistics',
                           icon: Icons.analytics,
-                          iconColor: Colors.teal,
+                          iconColor: const Color(0xFF118AB2),
                           children: [
                             _buildModernTile(
                               context: context,
                               icon: Icons.receipt_long_rounded,
                               title: 'Total Transactions',
                               subtitle: '${appState.transactions.length} recorded transactions',
-                              iconColor: Colors.indigo,
+                              iconColor: const Color(0xFF06D6A0),
                               onTap: () => _showTransactionStatsDialog(context, appState),
                             ),
                             _buildModernTile(
@@ -186,7 +196,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                               icon: Icons.pie_chart_rounded,
                               title: 'Category Usage',
                               subtitle: 'View category statistics',
-                              iconColor: Colors.pink,
+                              iconColor: const Color(0xFFF72585),
                               onTap: () => _showCategoryStatsDialog(context, appState),
                             ),
                           ],
@@ -198,14 +208,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                           context: context,
                           title: 'Support',
                           icon: Icons.help_center,
-                          iconColor: Colors.amber,
+                          iconColor: const Color(0xFFFF6B6B),
                           children: [
                             _buildModernTile(
                               context: context,
                               icon: Icons.help_outline_rounded,
                               title: 'Help & Support',
                               subtitle: 'Get help with using the app',
-                              iconColor: Colors.blue,
+                              iconColor: primary,
                               onTap: () => _showHelpDialog(context),
                             ),
                             _buildModernTile(
@@ -213,7 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                               icon: Icons.info_outline_rounded,
                               title: 'About',
                               subtitle: 'App version and information',
-                              iconColor: Colors.grey,
+                              iconColor: Colors.white.withValues(alpha: 0.7),
                               onTap: () => _showAboutDialog(context),
                             ),
                           ],
@@ -221,7 +231,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                         const SizedBox(height: 24),
 
                         // === Danger Zone ===
-                        _buildDangerSection(context, appState),
+                        _buildDangerSection(context, appState, danger),
 
                         const SizedBox(height: 100), // Bottom padding
                       ],
@@ -236,7 +246,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildQuickStatsSection(AppState appState) {
+  Widget _buildQuickStatsSection(AppState appState, Color primary) {
     final incomeTransactions = appState.transactions.where((t) => t.type == 'income').length;
     final expenseTransactions = appState.transactions.where((t) => t.type == 'expense').length;
 
@@ -248,7 +258,8 @@ class _SettingsScreenState extends State<SettingsScreen>
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: Colors.white,
+            letterSpacing: 0.5,
           ),
         ),
         const SizedBox(height: 16),
@@ -259,7 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 icon: Icons.receipt_long,
                 label: 'Transactions',
                 value: '${appState.transactions.length}',
-                color: Colors.blue,
+                color: primary,
               ),
             ),
             const SizedBox(width: 16),
@@ -268,7 +279,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 icon: Icons.category,
                 label: 'Categories',
                 value: '${appState.categories.length}',
-                color: Colors.green,
+                color: const Color(0xFF00FFA3),
               ),
             ),
           ],
@@ -281,7 +292,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 icon: Icons.arrow_upward,
                 label: 'Income',
                 value: '$incomeTransactions',
-                color: Colors.teal,
+                color: const Color(0xFF00D4FF),
               ),
             ),
             const SizedBox(width: 16),
@@ -290,7 +301,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 icon: Icons.arrow_downward,
                 label: 'Expenses',
                 value: '$expenseTransactions',
-                color: Colors.red,
+                color: const Color(0xFFFF6B6B),
               ),
             ),
           ],
@@ -308,13 +319,24 @@ class _SettingsScreenState extends State<SettingsScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1A1F3A),
+            Color(0xFF151929),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -326,6 +348,10 @@ class _SettingsScreenState extends State<SettingsScreen>
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: color.withValues(alpha: 0.2),
+                width: 1,
+              ),
             ),
             child: Icon(icon, color: color, size: 24),
           ),
@@ -334,8 +360,9 @@ class _SettingsScreenState extends State<SettingsScreen>
             label,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[600],
+              color: Colors.white.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
             ),
           ),
           const SizedBox(height: 4),
@@ -345,6 +372,13 @@ class _SettingsScreenState extends State<SettingsScreen>
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: color,
+              letterSpacing: 0.5,
+              shadows: [
+                Shadow(
+                  color: color.withValues(alpha: 0.4),
+                  blurRadius: 6,
+                ),
+              ],
             ),
           ),
         ],
@@ -369,6 +403,10 @@ class _SettingsScreenState extends State<SettingsScreen>
               decoration: BoxDecoration(
                 color: iconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: iconColor.withValues(alpha: 0.2),
+                  width: 1,
+                ),
               ),
               child: Icon(icon, color: iconColor, size: 20),
             ),
@@ -378,7 +416,8 @@ class _SettingsScreenState extends State<SettingsScreen>
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: Colors.white,
+                letterSpacing: 0.5,
               ),
             ),
           ],
@@ -386,13 +425,24 @@ class _SettingsScreenState extends State<SettingsScreen>
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1A1F3A),
+                Color(0xFF151929),
+              ],
+            ),
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
-                offset: const Offset(0, 2),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -403,7 +453,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   ? children[i ~/ 2]
                   : Divider(
                 height: 1,
-                color: Colors.grey[200],
+                color: Colors.white.withValues(alpha: 0.06),
                 indent: 20,
                 endIndent: 20,
               ),
@@ -436,6 +486,10 @@ class _SettingsScreenState extends State<SettingsScreen>
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: iconColor.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
                 ),
                 child: Icon(icon, color: iconColor, size: 24),
               ),
@@ -449,7 +503,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: Colors.white,
+                        letterSpacing: 0.3,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -457,7 +512,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                       subtitle,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: Colors.white.withValues(alpha: 0.6),
+                        letterSpacing: 0.2,
                       ),
                     ),
                   ],
@@ -466,13 +522,13 @@ class _SettingsScreenState extends State<SettingsScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
-                  color: Colors.grey[600],
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -482,12 +538,29 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildDangerSection(BuildContext context, AppState appState) {
+  Widget _buildDangerSection(BuildContext context, AppState appState, Color danger) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.red[50],
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1A1F3A),
+            Color(0xFF151929),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.red[200]!),
+        border: Border.all(
+          color: danger.withValues(alpha: 0.3),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: danger.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,10 +572,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.red[100],
+                    color: danger.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: danger.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
                   ),
-                  child: Icon(Icons.warning, color: Colors.red[600], size: 20),
+                  child: Icon(Icons.warning, color: danger, size: 20),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -510,7 +587,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red[700],
+                    color: danger,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ],
@@ -519,9 +597,19 @@ class _SettingsScreenState extends State<SettingsScreen>
           Container(
             margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1A1F3A),
+                  Color(0xFF151929),
+                ],
+              ),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.red[200]!),
+              border: Border.all(
+                color: danger.withValues(alpha: 0.3),
+                width: 1,
+              ),
             ),
             child: Material(
               color: Colors.transparent,
@@ -535,10 +623,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.red[100],
+                          color: danger.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: danger.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
                         ),
-                        child: Icon(Icons.delete_forever, color: Colors.red[600], size: 24),
+                        child: Icon(Icons.delete_forever, color: danger, size: 24),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -550,7 +642,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.red[700],
+                                color: danger,
+                                letterSpacing: 0.3,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -558,7 +651,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                               'Permanently delete all data',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.red[600],
+                                color: danger.withValues(alpha: 0.8),
+                                letterSpacing: 0.2,
                               ),
                             ),
                           ],
@@ -567,13 +661,17 @@ class _SettingsScreenState extends State<SettingsScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.red[100],
+                          color: danger.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: danger.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
                         ),
                         child: Icon(
                           Icons.arrow_forward_ios,
                           size: 16,
-                          color: Colors.red[600],
+                          color: danger,
                         ),
                       ),
                     ],
@@ -597,11 +695,15 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.analytics, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            const Text('Transaction Statistics'),
+            Icon(Icons.analytics, color: Color(0xFF00D4FF)),
+            SizedBox(width: 8),
+            Text(
+              'Transaction Statistics',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         content: Column(
@@ -637,11 +739,12 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.pie_chart, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            const Text('Category Statistics'),
+            Icon(Icons.pie_chart, color: Color(0xFF00D4FF)),
+            SizedBox(width: 8),
+            Text('Category Statistics', style: TextStyle(color: Colors.white)),
           ],
         ),
         content: SizedBox(
@@ -653,11 +756,14 @@ class _SettingsScreenState extends State<SettingsScreen>
               final entry = sortedCategories[index];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                  child: Text('${entry.value}'),
+                  backgroundColor: const Color(0xFF00D4FF).withValues(alpha: 0.1),
+                  child: Text(
+                    '${entry.value}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
-                title: Text(entry.key),
-                subtitle: Text('${entry.value} transactions'),
+                title: Text(entry.key, style: const TextStyle(color: Colors.white)),
+                subtitle: Text('${entry.value} transactions', style: const TextStyle(color: Colors.white70)),
               );
             },
           ),
@@ -677,24 +783,25 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.help, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            const Text('Help & Support'),
+            Icon(Icons.help, color: Color(0xFF00D4FF)),
+            SizedBox(width: 8),
+            Text('Help & Support', style: TextStyle(color: Colors.white)),
           ],
         ),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('• Add transactions using the + button'),
+            Text('• Add transactions using the + button', style: TextStyle(color: Colors.white70)),
             SizedBox(height: 8),
-            Text('• View analytics in the Analytics tab'),
+            Text('• View analytics in the Analytics tab', style: TextStyle(color: Colors.white70)),
             SizedBox(height: 8),
-            Text('• Manage categories in Settings'),
+            Text('• Manage categories in Settings', style: TextStyle(color: Colors.white70)),
             SizedBox(height: 8),
-            Text('• Export your data for backup'),
+            Text('• Export your data for backup', style: TextStyle(color: Colors.white70)),
           ],
         ),
         actions: [
@@ -712,22 +819,26 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.info, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            const Text('About'),
+            Icon(Icons.info, color: Color(0xFF00D4FF)),
+            SizedBox(width: 8),
+            Text('About', style: TextStyle(color: Colors.white)),
           ],
         ),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Finance Manager', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Finance Manager', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
             SizedBox(height: 8),
-            Text('Version 1.0.0'),
+            Text('Version 1.0.0', style: TextStyle(color: Colors.white70)),
             SizedBox(height: 8),
-            Text('A simple and elegant finance tracking app to help you manage your personal finances.'),
+            Text(
+              'A simple and elegant finance tracking app to help you manage your personal finances.',
+              style: TextStyle(color: Colors.white70),
+            ),
           ],
         ),
         actions: [
@@ -743,10 +854,10 @@ class _SettingsScreenState extends State<SettingsScreen>
   Widget _buildStatRow(String label, String value, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
+        Icon(icon, size: 20, color: Colors.white.withValues(alpha: 0.7)),
         const SizedBox(width: 12),
-        Expanded(child: Text(label)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Expanded(child: Text(label, style: const TextStyle(color: Colors.white))),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
       ],
     );
   }
@@ -756,11 +867,12 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.category, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            const Text('Manage Categories'),
+            Icon(Icons.category, color: Color(0xFF00D4FF)),
+            SizedBox(width: 8),
+            Text('Manage Categories', style: TextStyle(color: Colors.white)),
           ],
         ),
         content: SizedBox(
@@ -771,15 +883,16 @@ class _SettingsScreenState extends State<SettingsScreen>
             itemBuilder: (_, index) {
               final category = appState.categories[index];
               return Card(
+                color: const Color(0xFF151929),
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    child: Icon(Icons.category, color: Theme.of(context).primaryColor),
+                    backgroundColor: const Color(0xFF00D4FF).withValues(alpha: 0.1),
+                    child: const Icon(Icons.category, color: Color(0xFF00D4FF)),
                   ),
-                  title: Text(category.name),
+                  title: Text(category.name, style: const TextStyle(color: Colors.white)),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red[600]),
+                    icon: const Icon(Icons.delete, color: Color(0xFFFF6B6B)),
                     onPressed: () {
                       appState.deleteCategory(category.id);
                       Navigator.of(context).pop();
@@ -814,18 +927,24 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.add_circle, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            const Text('Add New Category'),
+            Icon(Icons.add_circle, color: Color(0xFF00D4FF)),
+            SizedBox(width: 8),
+            Text('Add New Category', style: TextStyle(color: Colors.white)),
           ],
         ),
         content: TextField(
           controller: controller,
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Category Name',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            hintStyle: const TextStyle(color: Colors.white70),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white30),
+            ),
           ),
         ),
         actions: [
@@ -837,6 +956,10 @@ class _SettingsScreenState extends State<SettingsScreen>
             child: const Text('Cancel'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF00D4FF),
+              foregroundColor: Colors.white,
+            ),
             onPressed: () {
               if (controller.text.isNotEmpty) {
                 final newCategory = Category(
@@ -860,18 +983,20 @@ class _SettingsScreenState extends State<SettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
+        backgroundColor: const Color(0xFF1A1F3A),
+        title: const Row(
           children: [
-            Icon(Icons.warning, color: Colors.red[600]),
-            const SizedBox(width: 8),
+            Icon(Icons.warning, color: Color(0xFFFF6B6B)),
+            SizedBox(width: 8),
             Text(
               'Clear All Data',
-              style: TextStyle(color: Colors.red[700]),
+              style: TextStyle(color: Color(0xFFFF6B6B), fontWeight: FontWeight.bold),
             ),
           ],
         ),
         content: const Text(
           'Are you sure you want to permanently delete all your financial data? This action cannot be undone.',
+          style: TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
@@ -880,7 +1005,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red[600],
+              backgroundColor: const Color(0xFFFF6B6B),
               foregroundColor: Colors.white,
             ),
             onPressed: () async {
@@ -899,7 +1024,8 @@ class _SettingsScreenState extends State<SettingsScreen>
   static void _showSnack(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(message, style: const TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF00D4FF),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:finance_manager/main.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart'; // Removed to match home_screen style
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   late Animation<double> _floatingAnimation;
   late Animation<double> _buttonScaleAnimation;
 
-  bool _isLoading = false;
+  // bool _isLoading = false; // DISABLED FOR TESTING
 
   @override
   void initState() {
@@ -102,9 +102,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   Future<void> _handleGetStarted() async {
-    if (_isLoading) return;
+    // if (_isLoading) return; // DISABLED FOR TESTING
 
-    setState(() => _isLoading = true);
+    // setState(() => _isLoading = true); // DISABLED FOR TESTING
     _buttonController.forward();
 
     await _markFirstLaunchComplete();
@@ -140,7 +140,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // Hardcoded theme colors from home_screen.dart
+    const primary = Color(0xFF00D4FF);
+    const backgroundColor = Color(0xFF0A0E21);
+
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -148,19 +151,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              theme.colorScheme.primary,
-              theme.colorScheme.primary.withValues(alpha: 0.8),
-              theme.colorScheme.primary.withValues(alpha: 0.6),
+              const Color(0xFF1E3A5F),
+              backgroundColor,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: const [0.0, 0.5, 1.0],
           ),
         ),
         child: Stack(
           children: [
             // Background decorative elements
-            _buildBackgroundDecorations(size),
+            _buildBackgroundDecorations(size, primary),
 
             // Main content
             SafeArea(
@@ -191,13 +192,22 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     child: Container(
                                       padding: const EdgeInsets.all(24),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.15),
+                                        color: Colors.white.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(24),
+                                        border: Border.all(
+                                          color: Colors.white.withValues(alpha: 0.15),
+                                          width: 1,
+                                        ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withValues(alpha: 0.2),
+                                            color: Colors.black.withValues(alpha: 0.3),
                                             blurRadius: 30,
                                             offset: const Offset(0, 10),
+                                          ),
+                                          BoxShadow(
+                                            color: primary.withValues(alpha: 0.1),
+                                            blurRadius: 40,
+                                            offset: const Offset(0, 0),
                                           ),
                                         ],
                                       ),
@@ -216,11 +226,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             // Welcome text with staggered animation
                             _buildAnimatedText(
                               'Welcome to Finance Manager!',
-                              GoogleFonts.poppins(
+                              const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 height: 1.2,
+                                letterSpacing: 0.5,
                               ),
                               delay: 0.3,
                             ),
@@ -229,17 +240,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             // Description text
                             _buildAnimatedText(
                               'Your personal assistant to track income, expenses, and manage your financial health with ease.',
-                              GoogleFonts.poppins(
+                              TextStyle(
                                 fontSize: 16,
-                                color: Colors.white.withValues(alpha: 0.9),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 height: 1.5,
+                                letterSpacing: 0.3,
                               ),
                               delay: 0.5,
                             ),
                             const SizedBox(height: 40),
 
                             // Feature highlights
-                            _buildFeatureHighlights(),
+                            // _buildFeatureHighlights(primary),
                             const SizedBox(height: 40),
 
                             // Get Started button
@@ -249,48 +261,63 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                 width: double.infinity,
                                 height: 60,
                                 decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      primary,
+                                      primary.withValues(alpha: 0.86),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withValues(alpha: 0.3),
                                       blurRadius: 20,
                                       offset: const Offset(0, 8),
                                     ),
+                                    BoxShadow(
+                                      color: primary.withValues(alpha: 0.28),
+                                      blurRadius: 30,
+                                      offset: const Offset(0, 0),
+                                    ),
                                   ],
                                 ),
                                 child: ElevatedButton(
-                                  onPressed: _isLoading ? null : _handleGetStarted,
+                                  // onPressed: _isLoading ? null : _handleGetStarted, // DISABLED FOR TESTING
+                                  onPressed: _handleGetStarted, // Always enabled for testing
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: theme.colorScheme.primary,
+                                    backgroundColor: Colors.transparent,
+                                    foregroundColor: Colors.white,
                                     elevation: 0,
                                     shadowColor: Colors.transparent,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                   ),
-                                  child: _isLoading
+                                  child: /* _isLoading
                                       ? SizedBox(
                                     width: 24,
                                     height: 24,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        theme.colorScheme.primary,
-                                      ),
+                                      valueColor: AlwaysStoppedAnimation<Color>(primary),
                                     ),
                                   )
-                                      : Row(
+                                      : */ Row( // DISABLED LOADING INDICATOR FOR TESTING
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         'Get Started',
-                                        style: GoogleFonts.poppins(
+                                        style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          letterSpacing: 0.5,
                                         ),
                                       ),
                                       const SizedBox(width: 8),
-                                      const Icon(Icons.arrow_forward, size: 20),
+                                      const Icon(Icons.arrow_forward, size: 20, color: Colors.white),
                                     ],
                                   ),
                                 ),
@@ -311,7 +338,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
   }
 
-  Widget _buildBackgroundDecorations(Size size) {
+  Widget _buildBackgroundDecorations(Size size, Color primary) {
     return Stack(
       children: [
         // Floating circles
@@ -327,8 +354,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: primary.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                      color: primary.withValues(alpha: 0.1),
+                      width: 1,
+                    ),
                   ),
                 ),
               );
@@ -347,8 +378,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.08),
+                    color: primary.withValues(alpha: 0.03),
                     borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: primary.withValues(alpha: 0.08),
+                      width: 1,
+                    ),
                   ),
                 ),
               );
@@ -363,8 +398,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: primary.withValues(alpha: 0.02),
               borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: primary.withValues(alpha: 0.06),
+                width: 1,
+              ),
             ),
           ),
         ),
@@ -395,65 +434,81 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
   }
 
-  Widget _buildFeatureHighlights() {
-    final features = [
-      {'icon': Icons.trending_up, 'text': 'Track\nIncome'},
-      {'icon': Icons.analytics, 'text': 'Financial\nAnalytics'},
-      {'icon': Icons.category, 'text': 'Smart\nCategories'},
-    ];
-
-    return AnimatedBuilder(
-      animation: _mainController,
-      builder: (context, child) {
-        final animationValue = Curves.easeOut.transform(
-          ((_mainController.value - 0.7).clamp(0.0, 1.0) / 0.3).clamp(0.0, 1.0),
-        );
-
-        return Opacity(
-          opacity: animationValue,
-          child: Transform.translate(
-            offset: Offset(0, 30 * (1 - animationValue)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: features.map((feature) {
-                return Flexible(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          feature['icon'] as IconData,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          feature['text'] as String,
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // Widget _buildFeatureHighlights(Color primary) {
+  //   final features = [
+  //     {'icon': Icons.trending_up, 'text': 'Track\nIncome'},
+  //     {'icon': Icons.analytics, 'text': 'Financial\nAnalytics'},
+  //     {'icon': Icons.category, 'text': 'Smart\nCategories'},
+  //   ];
+  //
+  //   return AnimatedBuilder(
+  //     animation: _mainController,
+  //     builder: (context, child) {
+  //       final animationValue = Curves.easeOut.transform(
+  //         ((_mainController.value - 0.7).clamp(0.0, 1.0) / 0.3).clamp(0.0, 1.0),
+  //       );
+  //
+  //       return Opacity(
+  //         opacity: animationValue,
+  //         child: Transform.translate(
+  //           offset: Offset(0, 30 * (1 - animationValue)),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //             children: features.map((feature) {
+  //               return Flexible(
+  //                 child: Container(
+  //                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+  //                   margin: const EdgeInsets.symmetric(horizontal: 4),
+  //                   decoration: BoxDecoration(
+  //                     gradient: LinearGradient(
+  //                       begin: Alignment.topLeft,
+  //                       end: Alignment.bottomRight,
+  //                       colors: [
+  //                         const Color(0xFF1A1F3A),
+  //                         const Color(0xFF151929),
+  //                       ],
+  //                     ),
+  //                     borderRadius: BorderRadius.circular(16),
+  //                     border: Border.all(
+  //                       color: Colors.white.withValues(alpha: 0.08),
+  //                       width: 1,
+  //                     ),
+  //                     boxShadow: [
+  //                       BoxShadow(
+  //                         color: Colors.black.withValues(alpha: 0.2),
+  //                         blurRadius: 8,
+  //                         offset: const Offset(0, 2),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   child: Column(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       Icon(
+  //                         feature['icon'] as IconData,
+  //                         color: primary,
+  //                         size: 24,
+  //                       ),
+  //                       const SizedBox(height: 8),
+  //                       Text(
+  //                         feature['text'] as String,
+  //                         style: TextStyle(
+  //                           fontSize: 11,
+  //                           color: Colors.white.withValues(alpha: 0.9),
+  //                           fontWeight: FontWeight.w500,
+  //                           letterSpacing: 0.2,
+  //                         ),
+  //                         textAlign: TextAlign.center,
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               );
+  //             }).toList(),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

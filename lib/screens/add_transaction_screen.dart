@@ -74,8 +74,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: Theme.of(context).primaryColor,
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFF00D4FF),
+            ),
+            dialogBackgroundColor: const Color(0xFF1A1F3A),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+              ),
             ),
           ),
           child: child!,
@@ -115,7 +121,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
       _transactionType = 'income';
     });
 
-    // Enhanced success feedback
+    // Enhanced success feedback using theme accent
+    const successColor = Color(0xFF00D4FF);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -123,7 +131,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.check, color: Colors.white, size: 20),
@@ -138,7 +146,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
             ),
           ],
         ),
-        backgroundColor: Colors.green[600],
+        backgroundColor: successColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -148,8 +156,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Hardcoded theme colors from home_screen.dart
+    const primary = Color(0xFF00D4FF);
+    const expenseColor = Color(0xFFFF6B6B);
+    const surfaceStart = Color(0xFF1A1F3A);
+    const surfaceEnd = Color(0xFF151929);
+    const backgroundColor = Color(0xFF0A0E21);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: backgroundColor,
       body: CustomScrollView(
         slivers: [
           // Enhanced App Bar with Gradient
@@ -159,17 +174,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
             pinned: true,
             elevation: 0,
             backgroundColor: Colors.transparent,
-            // leading: Container(
-            //   margin: const EdgeInsets.all(8),
-            //   decoration: BoxDecoration(
-            //     color: Colors.white.withValues(alpha: 0.2),
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   // child: IconButton(
-            //   //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-            //   //   onPressed: () => Navigator.of(context).pop(),
-            //   // ),
-            // ),
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
@@ -177,8 +181,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                      Theme.of(context).primaryColor,
+                      const Color(0xFF1E3A5F),
+                      backgroundColor,
                     ],
                   ),
                 ),
@@ -197,6 +201,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                               color: Colors.white,
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
@@ -206,8 +211,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                           child: Text(
                             'Track your income and expenses',
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.9),
+                              color: Colors.white.withValues(alpha: 0.7),
                               fontSize: 16,
+                              letterSpacing: 0.3,
                             ),
                           ),
                         ),
@@ -248,7 +254,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                           label: 'Income',
                                           icon: Icons.trending_up,
                                           isSelected: _transactionType == 'income',
-                                          selectedColor: Colors.green[600]!,
+                                          selectedColor: primary,
                                           onTap: () => setState(() => _transactionType = 'income'),
                                         ),
                                       ),
@@ -258,7 +264,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                           label: 'Expense',
                                           icon: Icons.trending_down,
                                           isSelected: _transactionType == 'expense',
-                                          selectedColor: Colors.red[600]!,
+                                          selectedColor: expenseColor,
                                           onTap: () => setState(() => _transactionType = 'expense'),
                                         ),
                                       ),
@@ -273,9 +279,23 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                   icon: Icons.attach_money,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[50],
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [surfaceStart, surfaceEnd],
+                                      ),
                                       borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(color: Colors.grey[200]!),
+                                      border: Border.all(
+                                        color: Colors.white.withValues(alpha: 0.08),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
                                     child: TextFormField(
                                       controller: _amountController,
@@ -283,24 +303,31 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                       style: const TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        letterSpacing: 0.5,
                                       ),
                                       decoration: InputDecoration(
                                         hintText: '0.00',
                                         hintStyle: TextStyle(
-                                          color: Colors.grey[400],
+                                          color: Colors.white.withValues(alpha: 0.28),
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
                                         ),
                                         prefixIcon: Container(
                                           margin: const EdgeInsets.all(12),
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                            color: primary.withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: primary.withValues(alpha: 0.2),
+                                              width: 1,
+                                            ),
                                           ),
                                           child: Icon(
                                             Icons.attach_money,
-                                            color: Theme.of(context).primaryColor,
+                                            color: primary,
                                             size: 20,
                                           ),
                                         ),
@@ -330,26 +357,51 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                   icon: Icons.description,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[50],
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [surfaceStart, surfaceEnd],
+                                      ),
                                       borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(color: Colors.grey[200]!),
+                                      border: Border.all(
+                                        color: Colors.white.withValues(alpha: 0.08),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
                                     child: TextFormField(
                                       controller: _descriptionController,
-                                      style: const TextStyle(fontSize: 16),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        letterSpacing: 0.3,
+                                      ),
                                       decoration: InputDecoration(
                                         hintText: 'What was this for?',
-                                        hintStyle: TextStyle(color: Colors.grey[400]),
+                                        hintStyle: TextStyle(
+                                          color: Colors.white.withValues(alpha: 0.28),
+                                          letterSpacing: 0.2,
+                                        ),
                                         prefixIcon: Container(
                                           margin: const EdgeInsets.all(12),
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                            color: primary.withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: primary.withValues(alpha: 0.2),
+                                              width: 1,
+                                            ),
                                           ),
                                           child: Icon(
                                             Icons.description,
-                                            color: Theme.of(context).primaryColor,
+                                            color: primary,
                                             size: 20,
                                           ),
                                         ),
@@ -376,13 +428,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                     runSpacing: 12,
                                     children: appState.categories
                                         .map((cat) => _EnhancedCategoryChip(
-                                      category: cat.name,
-                                      isSelected: cat.name == _selectedCategory,
-                                      onSelected: (selected) {
-                                        setState(() => _selectedCategory =
-                                        selected ? cat.name : null);
-                                      },
-                                    ))
+                                              category: cat.name,
+                                              isSelected: cat.name == _selectedCategory,
+                                              onSelected: (selected) {
+                                                setState(() => _selectedCategory =
+                                                    selected ? cat.name : null);
+                                              },
+                                            ))
                                         .toList(),
                                   ),
                                 ),
@@ -397,36 +449,56 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                     child: Container(
                                       padding: const EdgeInsets.all(20),
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[50],
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [surfaceStart, surfaceEnd],
+                                        ),
                                         borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(color: Colors.grey[200]!),
+                                        border: Border.all(
+                                          color: Colors.white.withValues(alpha: 0.08),
+                                          width: 1,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(alpha: 0.2),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
                                       ),
                                       child: Row(
                                         children: [
                                           Container(
                                             padding: const EdgeInsets.all(8),
                                             decoration: BoxDecoration(
-                                              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                              color: primary.withValues(alpha: 0.1),
                                               borderRadius: BorderRadius.circular(8),
+                                              border: Border.all(
+                                                color: primary.withValues(alpha: 0.2),
+                                                width: 1,
+                                              ),
                                             ),
                                             child: Icon(
                                               Icons.calendar_today,
-                                              color: Theme.of(context).primaryColor,
+                                              color: primary,
                                               size: 20,
                                             ),
                                           ),
                                           const SizedBox(width: 16),
                                           Text(
                                             intl.DateFormat('EEEE, MMM d, yyyy').format(_selectedDate),
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                              letterSpacing: 0.3,
                                             ),
                                           ),
                                           const Spacer(),
                                           Icon(
                                             Icons.arrow_drop_down,
-                                            color: Colors.grey[600],
+                                            color: Colors.white.withValues(alpha: 0.6),
                                           ),
                                         ],
                                       ),
@@ -446,16 +518,21 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
                                         colors: [
-                                          Theme.of(context).primaryColor,
-                                          Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                                          primary,
+                                          primary.withValues(alpha: 0.86),
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(16),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                                          color: primary.withValues(alpha: 0.28),
                                           blurRadius: 20,
                                           offset: const Offset(0, 8),
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.3),
+                                          blurRadius: 30,
+                                          offset: const Offset(0, 10),
                                         ),
                                       ],
                                     ),
@@ -479,6 +556,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen>
                                               color: Colors.white,
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
+                                              letterSpacing: 0.5,
                                             ),
                                           ),
                                         ],
@@ -526,16 +604,20 @@ class _EnhancedSectionCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white,
-            Colors.grey[50]!,
+            const Color(0xFF1A1F3A),
+            const Color(0xFF151929),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 20,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -547,22 +629,27 @@ class _EnhancedSectionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  color: const Color(0xFF00D4FF).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: const Color(0xFF00D4FF).withValues(alpha: 0.2),
+                    width: 1,
+                  ),
                 ),
                 child: Icon(
                   icon,
-                  color: Theme.of(context).primaryColor,
+                  color: const Color(0xFF00D4FF),
                   size: 20,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
@@ -601,7 +688,7 @@ class _EnhancedTransactionTypeCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? selectedColor.withValues(alpha: 0.1)
-              : Colors.grey[100],
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? selectedColor : Colors.transparent,
@@ -609,12 +696,12 @@ class _EnhancedTransactionTypeCard extends StatelessWidget {
           ),
           boxShadow: isSelected
               ? [
-            BoxShadow(
-              color: selectedColor.withValues(alpha: 0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ]
+                  BoxShadow(
+                    color: selectedColor.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
               : null,
         ),
         child: Column(
@@ -622,14 +709,16 @@ class _EnhancedTransactionTypeCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? selectedColor.withValues(alpha: 0.1)
-                    : Colors.white,
+                color: isSelected ? selectedColor.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.02),
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isSelected ? selectedColor.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.06),
+                  width: 1,
+                ),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? selectedColor : Colors.grey[600],
+                color: isSelected ? selectedColor : Colors.white.withValues(alpha: 0.72),
                 size: 24,
               ),
             ),
@@ -637,9 +726,10 @@ class _EnhancedTransactionTypeCard extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? selectedColor : Colors.black87,
+                color: isSelected ? selectedColor : Colors.white.withValues(alpha: 0.92),
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
+                letterSpacing: 0.3,
               ),
             ),
           ],
@@ -669,23 +759,19 @@ class _EnhancedCategoryChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).primaryColor
-              : Colors.white,
+          color: isSelected ? const Color(0xFF00D4FF) : Colors.white.withValues(alpha: 0.02),
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
-            color: isSelected
-                ? Theme.of(context).primaryColor
-                : Colors.grey[300]!,
+            color: isSelected ? const Color(0xFF00D4FF) : Colors.white.withValues(alpha: 0.06),
           ),
           boxShadow: isSelected
               ? [
-            BoxShadow(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ]
+                  BoxShadow(
+                    color: const Color(0xFF00D4FF).withValues(alpha: 0.22),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
               : null,
         ),
         child: Row(
@@ -703,9 +789,10 @@ class _EnhancedCategoryChip extends StatelessWidget {
             Text(
               category,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black87,
+                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.92),
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
+                letterSpacing: 0.2,
               ),
             ),
           ],

@@ -12,7 +12,7 @@ import 'package:finance_manager/screens/analytics_screen.dart';
 import 'package:finance_manager/screens/settings_screen.dart';
 import 'package:finance_manager/screens/welcome_screen.dart';
 
-import 'package:google_fonts/google_fonts.dart';
+// Removed GoogleFonts import
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -152,85 +152,115 @@ class _MyAppState extends State<MyApp> {
   }
 
   ThemeData _buildTheme(BuildContext context) {
-    return ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF6200EE),
-        primary: const Color(0xFF6200EE),
-        secondary: const Color(0xFF03DAC6),
-        tertiary: const Color(0xFFBB86FC),
-        error: const Color(0xFFB00020),
-        onPrimary: Colors.white,
+    const primaryAccent = Color(0xFF00D4FF);
+    const negativeAccent = Color(0xFFFF6B6B);
+    const deepBackground = Color(0xFF0A0E21);
+    const surfaceGradientStart = Color(0xFF1A1F3A);
+    const surfaceGradientEnd = Color(0xFF151929);
+
+    final base = ThemeData.dark();
+
+    return base.copyWith(
+      // useMaterial3: true,
+      scaffoldBackgroundColor: deepBackground,
+      primaryColor: primaryAccent,
+      colorScheme: const ColorScheme.dark(
+        primary: primaryAccent,
+        secondary: primaryAccent,
+        error: negativeAccent,
+        // background: deepBackground,
+        surface: surfaceGradientStart,
+        onPrimary: Colors.black,
         onSecondary: Colors.black,
-        onTertiary: Colors.black,
+        onSurface: Colors.white,
+        // onBackground: Colors.white,
         onError: Colors.white,
-        // background: const Color(0xFFF8F8F8),
-        // onBackground: Colors.black,
-        surface: Colors.white,
-        onSurface: Colors.black,
       ),
-      useMaterial3: true,
-      textTheme: GoogleFonts.poppinsTextTheme(
-        Theme.of(context).textTheme,
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.bold, letterSpacing: -0.25),
+        displayMedium: TextStyle(fontSize: 45, fontWeight: FontWeight.normal, letterSpacing: 0.0),
+        displaySmall: TextStyle(fontSize: 36, fontWeight: FontWeight.normal, letterSpacing: 0.0),
+        headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 0.0),
+        headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, letterSpacing: 0.0),
+        headlineSmall: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 0.0),
+        titleLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 0.0),
+        titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, letterSpacing: 0.15),
+        titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+        bodyLarge: TextStyle(fontSize: 16, letterSpacing: 0.5),
+        bodyMedium: TextStyle(fontSize: 14, letterSpacing: 0.25),
+        bodySmall: TextStyle(fontSize: 12, letterSpacing: 0.4),
+        labelLarge: TextStyle(fontSize: 14, letterSpacing: 1.0),
+        labelMedium: TextStyle(fontSize: 12, letterSpacing: 1.0),
+        labelSmall: TextStyle(fontSize: 11, letterSpacing: 1.5),
+      ).apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.white,
+
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        toolbarTextStyle: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme,
-        ).bodyMedium,
-        titleTextStyle: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme,
-        ).titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        foregroundColor: Colors.white,
+        toolbarTextStyle: TextStyle(fontSize: 16, letterSpacing: 0.3),
+        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, letterSpacing: 0.5, color: Colors.white),
       ),
+
       cardTheme: CardThemeData(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        color: surfaceGradientStart,
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.symmetric(vertical: 8),
       ),
+
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: Colors.grey[100],
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 16,
-        ),
-        hintStyle: GoogleFonts.poppins(color: Colors.grey[600]),
+        fillColor: surfaceGradientEnd.withValues(alpha: 0.6),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        hintStyle: const TextStyle(color: Colors.white70, letterSpacing: 0.3),
+        labelStyle: const TextStyle(color: Colors.white, letterSpacing: 0.3),
       ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF6200EE),
-          foregroundColor: Colors.white,
+          backgroundColor: primaryAccent,
+          foregroundColor: Colors.black,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 0.5),
         ),
       ),
+
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: const Color(0xFF6200EE),
-          textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          foregroundColor: primaryAccent,
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.3),
         ),
       ),
+
       chipTheme: ChipThemeData(
-        selectedColor: const Color(0xFF6200EE).withValues(alpha: 0.1),
-        checkmarkColor: const Color(0xFF6200EE),
-        labelStyle: GoogleFonts.poppins(color: Colors.black87),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: Colors.grey),
-        ),
+        backgroundColor: surfaceGradientEnd,
+        selectedColor: primaryAccent.withValues(alpha: 0.12),
+        labelStyle: const TextStyle(color: Colors.white, letterSpacing: 0.2),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
+
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: surfaceGradientEnd,
+        selectedItemColor: primaryAccent,
+        unselectedItemColor: Colors.grey[500],
+        showUnselectedLabels: true,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, letterSpacing: 0.3),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 12, letterSpacing: 0.2),
+      ),
+
+      // dialogBackgroundColor: surfaceGradientStart,
+      splashColor: primaryAccent.withValues(alpha: 0.12),
+      hoverColor: primaryAccent.withValues(alpha: 0.06),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
     );
   }
 }
@@ -270,15 +300,17 @@ class _MainScreenState extends State<MainScreen> {
             type: BottomNavigationBarType.fixed,
             currentIndex: appState.selectedIndex,
             onTap: appState.updateSelectedIndex,
-            selectedItemColor: const Color(0xFF6200EE),
+            selectedItemColor: const Color(0xFF00D4FF),
             unselectedItemColor: Colors.grey[500],
-            selectedLabelStyle: GoogleFonts.poppins(
+            selectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 12,
+              letterSpacing: 0.3,
             ),
-            unselectedLabelStyle: GoogleFonts.poppins(
+            unselectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: 12,
+              letterSpacing: 0.2,
             ),
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

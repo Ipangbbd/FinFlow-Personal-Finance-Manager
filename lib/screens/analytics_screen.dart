@@ -27,7 +27,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late TabController _tabController;
-
   final List<String> timeRanges = ['All Time', 'Last 3 Months', 'Last Month'];
 
   @override
@@ -53,23 +52,26 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Use hardcoded theme colors from home_screen.dart
+    const primary = Color(0xFF00D4FF);
+    const surfaceStart = Color(0xFF1A1F3A);
+    const surfaceEnd = Color(0xFF151929);
+    const backgroundColor = Color(0xFF0A0E21);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: backgroundColor,
       body: provider.Consumer<AppState>(
         builder: (context, appState, _) {
           final filteredTransactions = _getFilteredTransactions(appState);
           final totalIncome = _calculateTotal(filteredTransactions, 'income');
           final totalExpense = _calculateTotal(filteredTransactions, 'expense');
           final netWorth = totalIncome - totalExpense;
-
           final categoryExpenses = _groupExpensesByCategory(filteredTransactions);
           final sortedCategoryExpenses = categoryExpenses.entries.toList()
             ..sort((a, b) => b.value.compareTo(a.value));
-
           final monthlyIncome = _groupTransactionsByMonth(filteredTransactions, 'income');
           final monthlyExpense = _groupTransactionsByMonth(filteredTransactions, 'expense');
           final allMonths = _getAllMonths(monthlyIncome, monthlyExpense);
-
           final formatter = intl.NumberFormat.currency(
             locale: 'id_ID',
             symbol: 'Rp ',
@@ -80,7 +82,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             opacity: _fadeAnimation,
             child: CustomScrollView(
               slivers: [
-                // === Enhanced App Bar ===
+                // === Enhanced App Bar (styled like home) ===
                 SliverAppBar(
                   expandedHeight: 120,
                   floating: false,
@@ -94,8 +96,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                            Theme.of(context).primaryColor,
+                            const Color(0xFF1E3A5F),
+                            backgroundColor,
                           ],
                         ),
                       ),
@@ -105,7 +107,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Fixed: Wrapped Row in Flexible to prevent overflow
                               Flexible(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,6 +122,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                                               color: Colors.white,
                                               fontSize: 28,
                                               fontWeight: FontWeight.bold,
+                                              letterSpacing: 0.5,
                                             ),
                                           ),
                                           SizedBox(height: 4),
@@ -129,6 +131,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                                             style: TextStyle(
                                               color: Colors.white70,
                                               fontSize: 16,
+                                              letterSpacing: 0.3,
                                             ),
                                           ),
                                         ],
@@ -141,22 +144,26 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: 0.2),
+                                            color: Colors.white.withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(20),
-                                            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                                            border: Border.all(
+                                              color: Colors.white.withValues(alpha: 0.2),
+                                              width: 1,
+                                            ),
                                           ),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Icon(Icons.access_time, color: Colors.white.withValues(alpha: 0.9), size: 14),
+                                              Icon(Icons.access_time, color: Colors.white, size: 14),
                                               const SizedBox(width: 4),
                                               Flexible(
                                                 child: Text(
                                                   timeRanges[_selectedTimeRange],
-                                                  style: TextStyle(
-                                                    color: Colors.white.withValues(alpha: 0.9),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w500,
+                                                    letterSpacing: 0.3,
                                                   ),
                                                   overflow: TextOverflow.ellipsis,
                                                 ),
@@ -178,7 +185,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                     ),
                   ),
                 ),
-
                 // === Content ===
                 SliverToBoxAdapter(
                   child: Padding(
@@ -186,20 +192,32 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // === Enhanced Summary Cards ===
+                        // === Summary Section ===
                         _buildSummarySection(context, totalIncome, totalExpense, netWorth, formatter),
                         const SizedBox(height: 32),
-
                         // === Tab Section ===
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [surfaceStart, surfaceEnd],
+                            ),
                             borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
+                              width: 1,
+                            ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                              BoxShadow(
+                                color: primary.withValues(alpha: 0.1),
+                                blurRadius: 40,
+                                offset: const Offset(0, 0),
                               ),
                             ],
                           ),
@@ -209,15 +227,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                               Container(
                                 margin: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
+                                  color: Colors.white.withValues(alpha: 0.02),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: TabBar(
                                   controller: _tabController,
                                   labelColor: Colors.white,
-                                  unselectedLabelColor: Colors.grey[600],
+                                  unselectedLabelColor: Colors.white.withValues(alpha: 0.6),
                                   indicator: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
+                                    color: primary,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   indicatorSize: TabBarIndicatorSize.tab,
@@ -229,13 +247,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                                   ],
                                 ),
                               ),
-                              // Tab Content - Fixed: Added proper constraints
+                              // Tab Content
                               SizedBox(
                                 height: 400,
                                 child: TabBarView(
                                   controller: _tabController,
                                   children: [
-                                    _buildOverviewTab(context, totalIncome, totalExpense, formatter, filteredTransactions),
+                                    _buildOverviewTab(context, totalIncome, totalExpense, formatter, filteredTransactions, primary),
                                     _buildCategoriesTab(context, sortedCategoryExpenses, formatter, totalExpense),
                                     _buildTrendsTab(context, monthlyIncome, monthlyExpense, allMonths),
                                   ],
@@ -244,7 +262,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 100), // Bottom padding
                       ],
                     ),
@@ -259,6 +276,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   }
 
   Widget _buildSummarySection(BuildContext context, double totalIncome, double totalExpense, double netWorth, intl.NumberFormat formatter) {
+    final isPositive = netWorth >= 0;
+    const incomeColor = Color(0xFF00D4FF);
+    const expenseColor = Color(0xFFFF6B6B);
+    final netColor = isPositive ? incomeColor : expenseColor;
+
     return Column(
       children: [
         // Main balance card
@@ -270,104 +292,123 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                netWorth >= 0 ? Colors.green[400]! : Colors.red[400]!,
-                netWorth >= 0 ? Colors.green[600]! : Colors.red[600]!,
+                const Color(0xFF1A1F3A),
+                const Color(0xFF151929),
               ],
             ),
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                color: (netWorth >= 0 ? Colors.green : Colors.red).withValues(alpha: 0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 20,
-                offset: const Offset(0, 8),
+                offset: const Offset(0, 10),
+              ),
+              BoxShadow(
+                color: netColor.withValues(alpha: 0.1),
+                blurRadius: 40,
+                offset: const Offset(0, 0),
               ),
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
-                    child: Text(
-                      'Net Worth',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Net Worth',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white.withValues(alpha: 0.6),
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        formatter.format(netWorth),
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                          color: netColor,
+                          shadows: [
+                            Shadow(
+                              color: netColor.withValues(alpha: 0.5),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: netColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: netColor.withValues(alpha: 0.3),
+                        width: 1,
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            netWorth >= 0 ? Icons.trending_up : Icons.trending_down,
-                            size: 16,
-                            color: Colors.white,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isPositive ? Icons.trending_up : Icons.trending_down,
+                          size: 16,
+                          color: netColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          isPositive ? 'Profit' : 'Loss',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.3,
+                            color: netColor,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            netWorth >= 0 ? 'Profit' : 'Loss',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 12),
-              // Fixed: Added flexible text handling for large amounts
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  formatter.format(netWorth),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 16),
-
         // Income and Expense cards
         Row(
           children: [
             Expanded(
               child: _buildMiniSummaryCard(
                 context,
-                icon: Icons.arrow_upward,
+                icon: Icons.trending_up,
                 label: 'Income',
                 value: formatter.format(totalIncome),
-                color: Colors.green,
-                backgroundColor: Colors.green[50]!,
+                color: incomeColor,
+                backgroundColor: incomeColor.withValues(alpha: 0.1),
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: _buildMiniSummaryCard(
                 context,
-                icon: Icons.arrow_downward,
+                icon: Icons.trending_down,
                 label: 'Expenses',
                 value: formatter.format(totalExpense),
-                color: Colors.red,
-                backgroundColor: Colors.red[50]!,
+                color: expenseColor,
+                backgroundColor: expenseColor.withValues(alpha: 0.1),
               ),
             ),
           ],
@@ -386,13 +427,24 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1A1F3A),
+            const Color(0xFF151929),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -404,6 +456,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: color.withValues(alpha: 0.2),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                ),
+              ],
             ),
             child: Icon(icon, color: color, size: 24),
           ),
@@ -412,22 +474,25 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             label,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[600],
+              color: Colors.white.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
             ),
           ),
           const SizedBox(height: 4),
-          // Fixed: Added flexible text handling for currency values
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: color,
+              letterSpacing: 0.5,
+              shadows: [
+                Shadow(
+                  color: color.withValues(alpha: 0.4),
+                  blurRadius: 6,
+                ),
+              ],
             ),
           ),
         ],
@@ -435,7 +500,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     );
   }
 
-  Widget _buildOverviewTab(BuildContext context, double totalIncome, double totalExpense, intl.NumberFormat formatter, List<dynamic> transactions) {
+  Widget _buildOverviewTab(BuildContext context, double totalIncome, double totalExpense, intl.NumberFormat formatter, List<dynamic> transactions, Color primary) {
     final savings = totalIncome - totalExpense;
     final savingsRate = totalIncome > 0 ? (savings / totalIncome) * 100 : 0.0;
 
@@ -449,18 +514,28 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Colors.white,
+              letterSpacing: 0.5,
             ),
           ),
           const SizedBox(height: 20),
-
           // Savings rate progress
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.blue[50],
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFF1A1F3A),
+                  const Color(0xFF151929),
+                ],
+              ),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.blue[100]!),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 1,
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -474,7 +549,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.blue[700],
+                          color: Colors.white.withValues(alpha: 0.9),
+                          letterSpacing: 0.3,
                         ),
                       ),
                     ),
@@ -483,7 +559,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[700],
+                        color: Colors.white.withValues(alpha: 0.9),
+                        letterSpacing: 0.3,
                       ),
                     ),
                   ],
@@ -491,27 +568,28 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
                   value: savingsRate / 100,
-                  backgroundColor: Colors.blue[100],
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
+                  backgroundColor: Colors.white.withValues(alpha: 0.04),
+                  valueColor: AlwaysStoppedAnimation<Color>(primary),
                 ),
                 const SizedBox(height: 8),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    formatter.format(savings),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[700],
-                    ),
+                Text(
+                  formatter.format(savings),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: primary,
+                    shadows: [
+                      Shadow(
+                        color: primary.withValues(alpha: 0.4),
+                        blurRadius: 6,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 20),
-
           // Quick stats
           Row(
             children: [
@@ -520,7 +598,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   'Transactions',
                   '${transactions.length}',
                   Icons.receipt_long,
-                  Colors.purple,
+                  const Color(0xFF00D4FF),
                 ),
               ),
               const SizedBox(width: 12),
@@ -529,7 +607,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   'Avg. Income',
                   formatter.format(totalIncome / max(1, transactions.where((t) => t.type == 'income').length)),
                   Icons.trending_up,
-                  Colors.green,
+                  const Color(0xFF00D4FF),
                 ),
               ),
             ],
@@ -542,7 +620,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   'Avg. Expense',
                   formatter.format(totalExpense / max(1, transactions.where((t) => t.type == 'expense').length)),
                   Icons.trending_down,
-                  Colors.red,
+                  const Color(0xFFFF6B6B),
                 ),
               ),
               const SizedBox(width: 12),
@@ -551,7 +629,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   'Categories',
                   '${_groupExpensesByCategory(transactions).length}',
                   Icons.category,
-                  Colors.orange,
+                  const Color(0xFF00D4FF),
                 ),
               ),
             ],
@@ -567,7 +645,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: color.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -578,21 +659,23 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey[600],
+              color: Colors.white.withValues(alpha: 0.9),
+              letterSpacing: 0.2,
             ),
           ),
           const SizedBox(height: 4),
-          // Fixed: Added flexible text handling
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+              shadows: [
+                Shadow(
+                  color: color.withValues(alpha: 0.4),
+                  blurRadius: 6,
+                ),
+              ],
             ),
           ),
         ],
@@ -609,7 +692,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             Icon(
               Icons.pie_chart_outline,
               size: 64,
-              color: Colors.grey[400],
+              color: Colors.white.withValues(alpha: 0.18),
             ),
             const SizedBox(height: 16),
             Text(
@@ -617,7 +700,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: Colors.white.withValues(alpha: 0.9),
+                letterSpacing: 0.5,
               ),
             ),
             const SizedBox(height: 8),
@@ -625,7 +709,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               'Start adding expenses to see category breakdown',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[500],
+                color: Colors.white.withValues(alpha: 0.5),
+                letterSpacing: 0.3,
               ),
               textAlign: TextAlign.center,
             ),
@@ -644,12 +729,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Colors.white,
+              letterSpacing: 0.5,
             ),
           ),
           const SizedBox(height: 20),
-
-          // Pie Chart - Fixed: Wrapped in Flexible to prevent overflow
+          // Pie Chart
           Flexible(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -681,7 +766,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                               final isTouched = index == _touchedIndex;
                               final radius = isTouched ? 70.0 : 60.0;
                               final percentage = (amount / totalExpense) * 100;
-
                               return PieChartSectionData(
                                 color: _getCategoryColor(index),
                                 value: amount,
@@ -700,8 +784,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                         ),
                       ),
                     ),
-
-                    // Legend - Fixed: Added proper constraints
+                    // Legend
                     Expanded(
                       flex: 2,
                       child: SingleChildScrollView(
@@ -713,7 +796,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                             final categoryName = data.key;
                             final amount = data.value;
                             final percentage = (amount / totalExpense) * 100;
-
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               child: Row(
@@ -736,6 +818,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                                           style: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            letterSpacing: 0.3,
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -744,7 +828,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                                           '${percentage.toStringAsFixed(1)}%',
                                           style: TextStyle(
                                             fontSize: 10,
-                                            color: Colors.grey[600],
+                                            color: Colors.white.withValues(alpha: 0.7),
+                                            letterSpacing: 0.2,
                                           ),
                                         ),
                                       ],
@@ -776,7 +861,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             Icon(
               Icons.trending_up,
               size: 64,
-              color: Colors.grey[400],
+              color: Colors.white.withValues(alpha: 0.18),
             ),
             const SizedBox(height: 16),
             Text(
@@ -784,7 +869,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: Colors.white.withValues(alpha: 0.9),
+                letterSpacing: 0.5,
               ),
             ),
             const SizedBox(height: 8),
@@ -792,7 +878,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               'Add more transactions to see trends',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[500],
+                color: Colors.white.withValues(alpha: 0.5),
+                letterSpacing: 0.3,
               ),
             ),
           ],
@@ -805,7 +892,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Fixed: Wrapped title and toggles in Flexible widgets
           Flexible(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -817,7 +903,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
@@ -827,15 +914,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _buildChartToggle('Income', Colors.green, _showIncomeInChart, (value) {
+                        _buildChartToggle('Income', const Color(0xFF00D4FF), _showIncomeInChart, (value) {
                           setState(() => _showIncomeInChart = value);
                         }),
                         const SizedBox(width: 8),
-                        _buildChartToggle('Expense', Colors.red, _showExpenseInChart, (value) {
+                        _buildChartToggle('Expense', const Color(0xFFFF6B6B), _showExpenseInChart, (value) {
                           setState(() => _showExpenseInChart = value);
                         }),
                         const SizedBox(width: 8),
-                        _buildChartToggle('Net', Colors.blue, _showNetInChart, (value) {
+                        _buildChartToggle('Net', const Color(0xFF00D4FF), _showNetInChart, (value) {
                           setState(() => _showNetInChart = value);
                         }),
                       ],
@@ -846,7 +933,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             ),
           ),
           const SizedBox(height: 20),
-
           Expanded(
             child: _buildEnhancedTrendsChart(monthlyIncome, monthlyExpense, allMonths),
           ),
@@ -861,10 +947,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : Colors.grey[100],
+          color: isSelected ? color.withValues(alpha: 0.12) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? color : Colors.grey[300]!,
+            color: isSelected ? color : Colors.white.withValues(alpha: 0.06),
           ),
         ),
         child: Row(
@@ -874,7 +960,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: isSelected ? color : Colors.grey[400],
+                color: isSelected ? color : Colors.white.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -883,8 +969,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               label,
               style: TextStyle(
                 fontSize: 11,
-                color: isSelected ? color : Colors.grey[600],
+                color: isSelected ? color : Colors.white.withValues(alpha: 0.9),
                 fontWeight: FontWeight.w500,
+                letterSpacing: 0.2,
               ),
             ),
           ],
@@ -910,14 +997,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           return FlSpot(index, income);
         }).toList(),
         isCurved: true,
-        color: Colors.green[600]!,
+        color: const Color(0xFF00D4FF),
         barWidth: 3,
         dotData: FlDotData(
           show: true,
           getDotPainter: (spot, percent, barData, index) {
             return FlDotCirclePainter(
               radius: 4,
-              color: Colors.green[600]!,
+              color: const Color(0xFF00D4FF),
               strokeWidth: 2,
               strokeColor: Colors.white,
             );
@@ -925,7 +1012,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
         ),
         belowBarData: BarAreaData(
           show: true,
-          color: Colors.green.withValues(alpha: 0.1),
+          color: const Color(0xFF00D4FF).withValues(alpha: 0.08),
         ),
       ));
     }
@@ -939,14 +1026,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           return FlSpot(index, expense);
         }).toList(),
         isCurved: true,
-        color: Colors.red[600]!,
+        color: const Color(0xFFFF6B6B),
         barWidth: 3,
         dotData: FlDotData(
           show: true,
           getDotPainter: (spot, percent, barData, index) {
             return FlDotCirclePainter(
               radius: 4,
-              color: Colors.red[600]!,
+              color: const Color(0xFFFF6B6B),
               strokeWidth: 2,
               strokeColor: Colors.white,
             );
@@ -954,7 +1041,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
         ),
         belowBarData: BarAreaData(
           show: true,
-          color: Colors.red.withValues(alpha: 0.1),
+          color: const Color(0xFFFF6B6B).withValues(alpha: 0.08),
         ),
       ));
     }
@@ -968,14 +1055,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           return FlSpot(index, net);
         }).toList(),
         isCurved: true,
-        color: Colors.blue[600]!,
+        color: const Color(0xFF00D4FF),
         barWidth: 3,
         dotData: FlDotData(
           show: true,
           getDotPainter: (spot, percent, barData, index) {
             return FlDotCirclePainter(
               radius: 4,
-              color: Colors.blue[600]!,
+              color: const Color(0xFF00D4FF),
               strokeWidth: 2,
               strokeColor: Colors.white,
             );
@@ -991,9 +1078,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          horizontalInterval: maxY / 5,
+          horizontalInterval: maxY == 0 ? 1 : maxY / 5,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: Colors.white.withValues(alpha: 0.06),
             strokeWidth: 1,
           ),
         ),
@@ -1010,7 +1097,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                       allMonths[index].substring(0, 3),
                       style: TextStyle(
                         fontSize: 11,
-                        color: Colors.grey[600],
+                        color: Colors.white.withValues(alpha: 0.7),
+                        letterSpacing: 0.2,
                       ),
                     ),
                   );
@@ -1024,7 +1112,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              interval: maxY / 5,
+              interval: maxY == 0 ? 1 : maxY / 5,
               reservedSize: 60,
               getTitlesWidget: (value, _) => Text(
                 intl.NumberFormat.compactCurrency(
@@ -1034,7 +1122,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                 ).format(value),
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.grey[600],
+                  color: Colors.white.withValues(alpha: 0.7),
+                  letterSpacing: 0.2,
                 ),
               ),
             ),
@@ -1057,18 +1146,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   symbol: 'Rp ',
                   decimalDigits: 0,
                 );
-
-                Color color = Colors.blue[600]!;
+                Color color = const Color(0xFF00D4FF);
                 String label = 'Net';
-
                 if (spot.barIndex == 0 && _showIncomeInChart) {
-                  color = Colors.green[600]!;
+                  color = const Color(0xFF00D4FF);
                   label = 'Income';
                 } else if (spot.barIndex == 1 && _showExpenseInChart) {
-                  color = Colors.red[600]!;
+                  color = const Color(0xFFFF6B6B);
                   label = 'Expense';
                 }
-
                 return LineTooltipItem(
                   '$month\n$label: ${formatter.format(spot.y)}',
                   TextStyle(
@@ -1088,14 +1174,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
 
   Color _getCategoryColor(int index) {
     final colors = [
-      Colors.blue[600]!,
-      Colors.red[600]!,
-      Colors.green[600]!,
-      Colors.orange[600]!,
-      Colors.purple[600]!,
-      Colors.teal[600]!,
-      Colors.pink[600]!,
-      Colors.indigo[600]!,
+      Color(0xFF00D4FF),
+      Color(0xFFFF6B6B),
+      Color(0xFF00FFA3),
+      Color(0xFFFFD166),
+      Color(0xFF6A4C93),
+      Color(0xFF118AB2),
+      Color(0xFFF72585),
+      Color(0xFF06D6A0),
     ];
     return colors[index % colors.length];
   }
@@ -1106,8 +1192,31 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                const Color(0xFF1A1F3A),
+                const Color(0xFF151929),
+              ],
+            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 20,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1116,7 +1225,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1126,6 +1235,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
                 ),
               ),
               const SizedBox(height: 16),
@@ -1136,17 +1247,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   leading: Icon(
                     index == 0 ? Icons.all_inclusive :
                     index == 1 ? Icons.calendar_view_month : Icons.calendar_today,
+                    color: Colors.white,
                   ),
-                  title: Text(range),
+                  title: Text(range, style: const TextStyle(color: Colors.white)),
                   trailing: _selectedTimeRange == index
-                      ? Icon(Icons.check, color: Theme.of(context).primaryColor)
+                      ? Icon(Icons.check, color: const Color(0xFF00D4FF))
                       : null,
                   onTap: () {
                     setState(() => _selectedTimeRange = index);
                     Navigator.pop(context);
                   },
                 );
-              })
+              }).toList(),
             ],
           ),
         );
@@ -1157,7 +1269,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   /// ----------------------
   /// 🔹 Helper Methods
   /// ----------------------
-
   List<dynamic> _getFilteredTransactions(AppState appState) {
     final now = DateTime.now();
     return appState.transactions.where((transaction) {
@@ -1198,10 +1309,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   }
 
   List<String> _getAllMonths(Map<String, double> monthlyIncome, Map<String, double> monthlyExpense) {
-    final allMonths = {...monthlyIncome.keys, ...monthlyExpense.keys}.toList();
-    allMonths.sort((a, b) => intl.DateFormat('MMM yyyy')
+    final months = {...monthlyIncome.keys, ...monthlyExpense.keys}.toList();
+    months.sort((a, b) => intl.DateFormat('MMM yyyy')
         .parse(a)
         .compareTo(intl.DateFormat('MMM yyyy').parse(b)));
-    return allMonths;
+    return months;
   }
 }
